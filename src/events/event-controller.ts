@@ -72,6 +72,32 @@ class EventController {
           res.status(500).send({error: 'Error fetching events'})
         }
       }
+
+      updateEvent = async (req: Request, res: Response): Promise<void> => {
+        try {
+          const { id } = req.params;
+          const updateEventDto: CreateEventDto = req.body;
+          const event = await this.eventService.updateEvent(id, updateEventDto);
+          if (!event) {
+            res.status(404).json({ message: 'Event not found' });
+            return;
+          }
+          res.status(200).json(event);
+        }
+        catch (error: any) {
+          res.status(500).send({ error: error.message });
+        }
+      }
+
+      deleteEvent = async (req: Request, res: Response): Promise<void> => {
+        try {
+          const { id } = req.params;
+          await this.eventService.deleteEvent(id);
+          res.status(204).send();
+        } catch (error: any) {
+          res.status(500).send({ error: error.message });
+        }
+      }
 }
 
 export default EventController;

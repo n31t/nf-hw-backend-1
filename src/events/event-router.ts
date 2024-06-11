@@ -13,6 +13,8 @@ const eventController = new EventController(eventService);
 eventRouter.get('/events/', authMiddleware, eventController.getEventsByCity);
 eventRouter.get('/events/all',eventController.getEvents);
 eventRouter.post('/events/',eventController.createEvent);
+eventRouter.put('/events/:id',eventController.updateEvent);
+eventRouter.delete('/events/:id',eventController.deleteEvent);
 eventRouter.get('/events/:id', eventController.getEventById);
 
 export default eventRouter;
