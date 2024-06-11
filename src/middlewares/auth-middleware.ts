@@ -17,5 +17,6 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
   }
 
   (req as any).user = payload;
+  console.log(payload)
   next();
 };

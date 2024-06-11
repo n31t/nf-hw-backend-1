@@ -1,6 +1,9 @@
 import { Request, Response } from 'express';
 import { CreateEventDto } from './dtos/CreateEvent.dot';
 import EventService from './event-service';
+import { User } from '../auth/types/response';
+
+
 
 class EventController {
     private eventService : EventService;
@@ -22,9 +25,16 @@ class EventController {
 
 
 
-    getEvents = async (req: Request, res: Response): Promise<void> => {
+      getEvents = async (req: Request, res: Response): Promise<void> => {
         try {
-          const events = await this.eventService.getEvents();
+          const { query, sortField, sortOrder, page, pageSize } = req.query;
+          const events = await this.eventService.getEvents(
+            query as string,
+            sortField as string,
+            sortOrder as string,
+            Number(page),
+            Number(pageSize)
+          );
           res.status(200).json(events);
         } catch (error: any) {
           res.status(500).send({ error: error.message });
@@ -45,6 +55,21 @@ class EventController {
           res.status(200).json(event);
         } catch (error: any) {
           res.status(500).send({ error: error.message });
+        }
+      }
+
+
+      
+      getEventsByCity = async (req: Request, res: Response): Promise<void> => {
+        try {
+          const location = (req as any).user.location
+          console.log(location)
+          
+          const events = await this.eventService.getEventsByCity(location);
+          res.status(200).json(events);
+        }
+        catch {
+          res.status(500).send({error: 'Error fetching events'})
         }
       }
 }

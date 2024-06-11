@@ -9,7 +9,7 @@ export interface IEvent extends Document {
 }
 
 const EventSchema: Schema = new Schema({
-    name: { type: String, required: true, unique: true },
+    name: { type: String, required: true,},
     description: { type: String, required: true },
     date: { type: Date, default: Date.now },
     location: { type: String, required: true },

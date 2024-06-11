@@ -12,8 +12,23 @@ class EventService {
       return await EventModel.findById(id).exec();
     }
 
-    async getEvents(): Promise<IEvent[]> {
-      return await EventModel.find().exec(); 
+    async getEvents(query = '', sortField = 'date', sortOrder = 'asc', page = 1, pageSize = 2): Promise<IEvent[]> {
+      const skip = (page - 1) * pageSize;
+      const sortDirection = sortOrder === 'asc' ? 1 : -1;
+      return await EventModel.find({
+        $or: [
+          { name: { $regex: query, $options: 'i' } },
+          { description: { $regex: query, $options: 'i' } }
+        ]
+      })
+      .sort({ [sortField]: sortDirection })
+      .skip(skip)
+      .limit(pageSize)
+      .exec(); 
+    }
+
+    async getEventsByCity(location: string): Promise<IEvent[]> {
+      return await EventModel.find({ location }).exec();
     }
 
     async createEvent(createEventDto: CreateEventDto): Promise<IEvent> {
